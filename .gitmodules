@@ -1,6 +1,6 @@
 [submodule "OC_SORT"]
 	path = OC_SORT
-	url = https://github.com/IIM-TTIJ/OC_SORT_for_SMOT4SB
+	url = https://github.com/Howardkhh/OC_SORT_for_SMOT4SB
 [submodule "TrackEval"]
 	path = TrackEval
 	url = https://github.com/IIM-TTIJ/TrackEval
