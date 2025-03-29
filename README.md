@@ -135,6 +135,12 @@ After that, run the following command to format the dataset according to the bas
 python3 scripts/prepare_dataset.py
 ```
 
+**Note:** If you run this script again, you will encounter an error because symbolic links have already been placed in `OC_SORT/datasets`. In that case, make sure to run the following command before executing the script to unlink the symbolic links:
+
+```sh
+find OC_SORT/datasets/SMOT4SB -type l -exec unlink {} \;
+```
+
 #### 2️⃣ Package installation
 
 ```sh
@@ -151,7 +157,7 @@ First, run the following command under the project root to get the COCO-pretrain
    
 ```sh
 mkdir OC_SORT/pretrained
-wget -P OC_SORT/pretrained https://github.com/Megvii-BaseDetection/storage/releases/download/0.0.1/yolox_x.pth
+wget -P OC_SORT/pretrained https://github.com/Megvii-BaseDetection/storage/releases/download/0.0.1/yolox_l.pth
 ```
 
 You can also use any model from [this link](https://github.com/Megvii-BaseDetection/YOLOX/tree/0.1.0?tab=readme-ov-file#benchmark).
@@ -159,7 +165,7 @@ You can also use any model from [this link](https://github.com/Megvii-BaseDetect
 To train the model, run the following command:
 
 ```sh
-sh scripts/train.sh -f OC_SORT/exps/smot4sb.py -d 8 -b 48 --fp16 -c OC_SORT/pretrained/yolox_x.pth
+sh scripts/train.sh -f OC_SORT/exps/smot4sb.py -d 8 -b 48 --fp16 -c OC_SORT/pretrained/yolox_l.pth
 ```
 
 Outputs will be saved under `YOLOX_outputs/smot4sb`.
