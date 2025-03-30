@@ -3,7 +3,7 @@ scripts/prepare_dataset.py also makes an empty pub_test.json annotation file.
 
 ## Track with existing COCO object predictions
 ```bash
-bash scripts/predict_from_coco.sh --path {image path, e.g. OC_SORT/datasets/SMOT4SB/pub_test} --ann_path {COCO annotation, e.g. OC_SORT/datasetes/SMOT4SB/annotations/pub_test.json} --pred_path {COCO prediction path} --output_dir {output_dir}
+bash scripts/predict_from_coco.sh --path {image path, e.g. OC_SORT/datasets/SMOT4SB/pub_test} --ann_path {COCO annotation, e.g. OC_SORT/datasets/SMOT4SB/annotations/pub_test.json} --pred_path {COCO prediction path} --output_dir {output_dir}
 ```
 
 # MVA2025-SMOT4SB Baseline Code
