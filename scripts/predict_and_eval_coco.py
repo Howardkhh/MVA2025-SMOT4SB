@@ -7,9 +7,10 @@ parser.add_argument('--ann_path', type=str, required=True, help='path to coco an
 parser.add_argument('--pred_path', type=str, required=True, help='path to coco prediction file')
 parser.add_argument('--output_dir', type=str, required=True, help='output directory')
 parser.add_argument('--split', type=str, default='val', choices=['val', 'train'], help='split to evaluate on')
+parser.add_argument('--use_nwd', default=False, action="store_true", help='use nwd instead of iou during tracking')
 args = parser.parse_args()
 
-if os.system(f"bash scripts/predict_from_coco.sh --path {args.path} --ann_path {args.ann_path} --pred_path {args.pred_path} --output_dir {args.output_dir}"):
+if os.system(f"bash scripts/predict_from_coco.sh --path {args.path} --ann_path {args.ann_path} --pred_path {args.pred_path} --output_dir {args.output_dir} {'--use_nwd' if args.use_nwd else ''}"):
     print("Error running predict_from_coco.sh")
     exit(1)
 if os.system(f"python scripts/cp_preds_for_eval.py -i {args.output_dir}/predictions/{args.split}/ -o eval_inputs"):

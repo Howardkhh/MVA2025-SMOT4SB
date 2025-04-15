@@ -9,6 +9,7 @@ import matplotlib.colors as mcolors
 import numpy as np
 from PIL import Image, ImageDraw
 from tqdm import tqdm
+from pycocotools.coco import COCO
 
 tqdm_bar_format = (
     "{desc}: {percentage:3.0f}% |{bar:30}| [{elapsed}<{remaining}, {rate_fmt}]"
@@ -60,7 +61,17 @@ def main():
         action="store_true",
         help="If true, shows bounding boxes in the visualization.",
     )
+    parser.add_argument(
+        "--coco_pred",
+        type=str
+    )
+    parser.add_argument(
+        "--coco_ann",
+        type=str
+    )
     args = parser.parse_args()
+
+    assert (args.coco_pred != "") == (args.coco_ann != ""), "Both COCO predictions and COCO annotation must be provided!" 
 
     ch_file = args.mot_ch_file
     image_dir = args.image_dir
@@ -80,10 +91,25 @@ def main():
                 {"track_id": int(float(line[1])), "bbox": list(map(float, line[2:6]))}
             )
 
-    visualize(sub, image_dir, out_file, size, mp4, show_bbox)
+    if args.coco_ann:
+        coco = COCO(args.coco_ann)
+        coco_pred = coco.loadRes(str(args.coco_pred))
+
+        img_name2pred = {}
+        for img_id in coco.imgs:
+            img_info = coco.imgs[img_id]
+            ann_ids = coco_pred.getAnnIds(imgIds=img_id)
+            preds = coco_pred.loadAnns(ann_ids)
+            img_name2pred[img_info["file_name"]] = preds
+
+    else:
+        img_name2pred = None
 
 
-def visualize(sub, image_dir, out_file, size=None, mp4=False, show_bbox=False):
+    visualize(sub, image_dir, out_file, size, mp4, show_bbox, img_name2pred)
+
+
+def visualize(sub, image_dir, out_file, size=None, mp4=False, show_bbox=False, img_name2pred=None):
     image_paths = sorted([str(x) for x in pathlib.Path(image_dir).rglob("*.jpg")])
 
     colors = [mcolor2tuple(hex_color) for hex_color in mcolors.XKCD_COLORS.values()]
@@ -96,6 +122,7 @@ def visualize(sub, image_dir, out_file, size=None, mp4=False, show_bbox=False):
     trajectories = {}  # track_id -> [(x, y), ...]
     for i, image_path in enumerate(image_paths, 1):
         read_image = Image.open(image_path)
+        img_copy = np.array(read_image).copy()
         draw = ImageDraw.Draw(read_image)
         annotations = sub.get(i, [])
 
@@ -124,6 +151,14 @@ def visualize(sub, image_dir, out_file, size=None, mp4=False, show_bbox=False):
 
         if size is not None:
             read_image = read_image.resize(size)
+        
+        if img_name2pred:
+            for pred in img_name2pred[str(pathlib.Path(*pathlib.Path(image_path).parts[-2:]))]:
+                p1, p2 = (int(pred['bbox'][0]), int(pred['bbox'][1])), (int(pred['bbox'][0] + pred['bbox'][2]), int(pred['bbox'][1] + pred['bbox'][3]))
+                img_copy = cv2.rectangle(img_copy, p1, p2, color=(0, 0, 255), thickness=1)
+            read_image = np.array(read_image)
+            read_image = np.concatenate([read_image, img_copy], axis=0)
+            read_image = Image.fromarray(read_image)
 
         drew_images.append(read_image)
 
@@ -143,6 +178,7 @@ def get_box_center(bbox):
 
 
 def save(images, out_file, mp4):
+    os.makedirs(pathlib.Path(out_file).parent, exist_ok=True)
     if mp4:
         file_with_ext = f"{out_file}.mp4"
         write_mp4(images, file_with_ext)
