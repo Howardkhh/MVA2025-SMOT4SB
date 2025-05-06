@@ -5,3 +5,9 @@
 	path = TrackEval
 	url = https://github.com/IIM-TTIJ/TrackEval
 	branch = smot4sb_dev
+[submodule "MVA2025-yolov9"]
+	path = MVA2025-yolov9
+	url = https://github.com/Howardkhh/MVA2025-yolov9.git
+[submodule "MVA2025-WBF"]
+	path = MVA2025-WBF
+	url = https://github.com/Howardkhh/MVA2025-WBF.git
