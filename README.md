@@ -39,14 +39,18 @@ docker run --rm	-i -t \
     --gpus all \
     --shm-size 32G \
     howardkhh/mva2025_elsalab_team1
-cd OC_SORT
-python3 setup.py develop
-cd ..
 ```
 After launching the Docker container, the working directory should be the `MVA2025-SMOT4SB` folder. 
 
 **All of the commands below should be executed in `MVA2025-SMOT4SB` directory.**
 The docker image is built with the `Dockerfile` within the root of our repository, and has been uploaded to the Dockerhub.
+
+### 1.4 Install OC_SORT
+```bash
+cd OC_SORT
+python3 setup.py develop
+cd ..
+```
 
 ## 2. Model Weights
 
@@ -79,20 +83,20 @@ Please make sure that the files are in the following structure (only the most im
 MVA2025-SMOT4SB
 ├── MVA2025-WBF
 ├── MVA2025-yolov9
-|   ├── datasets
-|   |   └── SMOT4SB
-|   |       ├── annotations
-|   |       |   └── private_test.json
-|   |       ├── images
-|   |       |   └── private_test
-|   |       |       ├── 0001
-|   |       |       │   ├── 00001.jpg
-|   |       |       │   └── ...
-|   |       |       └── 0002
-|   |       |           ├── 00001.jpg
-|   |       |           └── ...
-|   |       └── labels
-|   └── ...
+│   ├── datasets
+│   │   └── SMOT4SB
+│   │       ├── annotations
+│   │       │   └── private_test.json
+│   │       ├── images
+│   │       │   └── private_test
+│   │       │       ├── 0001
+│   │       │       │   ├── 00001.jpg
+│   │       │       │   └── ...
+│   │       │       └── 0002
+│   │       │           ├── 00001.jpg
+│   │       │           └── ...
+│   │       └── labels
+│   └── ...
 ├── OC_SORT
 ├── TrackEval
 ├── Weights
@@ -100,14 +104,14 @@ MVA2025-SMOT4SB
 │   ├── yolov9-e-mva-sahi-nwd-pos0.8.pt
 │   ├── yolov9-e-mva-sahi-nwd-stack_frame.pt
 │   ├── yolov9-e-mva-sahi-nwd.pt
-|   └── yolov9-e-mva-sahi.pt
+│   └── yolov9-e-mva-sahi.pt
 ├── assets
 ├── datasets
-|   └── SMOT4SB -> <absolute path to the SMOT4SB folder>
-|       └── private_test
-|           ├── 0001
-|           ├── 0002
-|           └── ...
+│   └── SMOT4SB -> <absolute path to the SMOT4SB folder>
+│       └── private_test
+│           ├── 0001
+│           ├── 0002
+│           └── ...
 └── scripts
 ```
 
